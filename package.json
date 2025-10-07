@@ -1,0 +1,22 @@
+{
+  "name": "base-astro-tw-plot",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/netlify": "^6.5.9",
+    "@observablehq/plot": "^0.6.17",
+    "@tailwindcss/vite": "^4.1.13",
+    "astro": "^5.13.5",
+    "jsdom": "^26.1.0",
+    "tailwindcss": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7"
+  }
+}
