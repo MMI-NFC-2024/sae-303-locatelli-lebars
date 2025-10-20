@@ -6,16 +6,538 @@ import penguins from "../assets/penguins.json";
 ---
 
 <Layout>
-  <h1 class="text-2xl">Test Astro et Plot (Observablehq)</h1>
-  <PlotFigure
-    options={{
-      marks: [
-        Plot.dot(penguins, {
-          x: "culmen_length_mm",
-          y: "culmen_depth_mm",
-          stroke: "species",
-        }),
-      ],
-    }}
-  />
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <div class="logo">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="10" fill="url(#gradient)"/>
+            <path d="M12 20L16 16L24 24L28 20" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="16" cy="16" r="2" fill="white"/>
+            <circle cx="24" cy="24" r="2" fill="white"/>
+            <defs>
+              <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0066CC"/>
+                <stop offset="1" stop-color="#00A859"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="logo-text">Tourisme en Train</span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#accueil">Accueil</a></li>
+          <li><a href="#contexte">Contexte</a></li>
+          <li><a href="#donnees">Données</a></li>
+          <li><a href="#visualisations">Visualisations</a></li>
+          <li><a href="#conclusions">Conclusions</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="accueil">
+    <div class="container">
+      <div class="hero-content">
+        <div class="badge fade-in-up" style="animation-delay: 0.1s;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 2C6.34 2 5 3.34 5 5c0 2.92 3 6.5 3 6.5s3-3.58 3-6.5c0-1.66-1.34-3-3-3zm0 4.5c-.83 0-1.5-.67-1.5-1.5S7.17 3.5 8 3.5s1.5.67 1.5 1.5S8.83 6.5 8 6.5z"/>
+          </svg>
+          Projet Open Data University - SAÉ 303
+        </div>
+        <h1 class="hero-title fade-in-up" style="animation-delay: 0.2s;">
+          <span class="text-gradient">Tourisme en Train</span>
+        </h1>
+        <p class="hero-subtitle fade-in-up" style="animation-delay: 0.3s;">
+          Comment faciliter et encourager le tourisme en train en France ?
+        </p>
+        <p class="hero-description fade-in-up" style="animation-delay: 0.4s;">
+          Une exploration des données ouvertes pour valoriser le voyage durable et réduire l'empreinte carbone du tourisme français.
+        </p>
+        <div class="hero-cta fade-in-up" style="animation-delay: 0.5s;">
+          <a href="#visualisations" class="btn btn-primary">
+            Explorer les données
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 3L9 4l5 5H3v2h11l-5 5 1 1 7-7-7-7z"/>
+            </svg>
+          </a>
+          <a href="#contexte" class="btn btn-outline">En savoir plus</a>
+        </div>
+        
+        <!-- Stats rapides -->
+        <div class="stats fade-in-up" style="animation-delay: 0.6s;">
+          <div class="stat-item">
+            <div class="stat-number">97M</div>
+            <div class="stat-label">tonnes de CO₂ (tourisme 2022)</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">69%</div>
+            <div class="stat-label">émissions liées au transport</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">10x</div>
+            <div class="stat-label">moins de CO₂ en train vs voiture</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Forme décorative -->
+    <div class="hero-shape"></div>
+  </section>
+
+  <!-- Section Contexte -->
+  <section class="section section-context" id="contexte">
+    <div class="container">
+      <div class="section-header">
+        <h2>Le défi du tourisme durable</h2>
+        <p>Face aux enjeux climatiques, le train s'impose comme une solution privilégiée pour voyager tout en réduisant notre empreinte carbone.</p>
+      </div>
+      
+      <div class="context-grid">
+        <div class="card context-card">
+          <div class="card-icon" style="background: rgba(0, 102, 204, 0.1);">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0066CC" stroke-width="2">
+              <rect x="6" y="8" width="20" height="16" rx="2"/>
+              <circle cx="11" cy="26" r="2"/>
+              <circle cx="21" cy="26" r="2"/>
+              <path d="M6 12h20M16 8v8"/>
+            </svg>
+          </div>
+          <h3>3000+ gares</h3>
+          <p>Un maillage dense couvrant l'ensemble du territoire français pour un tourisme de proximité.</p>
+        </div>
+        
+        <div class="card context-card">
+          <div class="card-icon" style="background: rgba(0, 168, 89, 0.1);">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#00A859" stroke-width="2">
+              <path d="M16 4l-8 8h6v12h4V12h6l-8-8z"/>
+              <path d="M6 28h20"/>
+            </svg>
+          </div>
+          <h3>Impact environnemental</h3>
+          <p>Le train émet près de 10 fois moins de CO₂ qu'une voiture individuelle sur 500 km.</p>
+        </div>
+        
+        <div class="card context-card">
+          <div class="card-icon" style="background: rgba(255, 107, 53, 0.1);">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#FF6B35" stroke-width="2">
+              <circle cx="16" cy="16" r="10"/>
+              <path d="M16 8v8l4 4"/>
+            </svg>
+          </div>
+          <h3>Accessibilité</h3>
+          <p>Découvrir des destinations touristiques méconnues et faciliter l'organisation de voyages durables.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Données & Visualisations -->
+  <section class="section section-data" id="visualisations">
+    <div class="container">
+      <div class="section-header">
+        <h2>Exploration des données</h2>
+        <p>Analyse et visualisation des données ouvertes pour comprendre et valoriser le tourisme en train.</p>
+      </div>
+      
+      <!-- Exemple de visualisation (penguins - à remplacer) -->
+      <div class="visualization-container card">
+        <div class="visualization-header">
+          <h3>Exemple de visualisation</h3>
+          <p class="text-secondary">Cette visualisation sera remplacée par vos données de tourisme ferroviaire</p>
+        </div>
+        <PlotFigure
+          options={{
+            marks: [
+              Plot.dot(penguins, {
+                x: "culmen_length_mm",
+                y: "culmen_depth_mm",
+                stroke: "species",
+              }),
+            ],
+          }}
+        />
+        <div class="visualization-footer">
+          <p class="text-light">Source : Exemple avec données penguins - À remplacer par vos analyses</p>
+        </div>
+      </div>
+      
+      <!-- Placeholder pour futures visualisations -->
+      <div class="visualizations-grid">
+        <div class="card viz-placeholder">
+          <div class="viz-icon">📊</div>
+          <h4>Carte interactive</h4>
+          <p>Visualisation géographique des gares et destinations touristiques</p>
+        </div>
+        <div class="card viz-placeholder">
+          <div class="viz-icon">🗺️</div>
+          <h4>Carte isochrone</h4>
+          <p>Temps de trajet depuis les grandes villes françaises</p>
+        </div>
+        <div class="card viz-placeholder">
+          <div class="viz-icon">📈</div>
+          <h4>Comparaison CO₂</h4>
+          <p>Impact environnemental train vs autres transports</p>
+        </div>
+        <div class="card viz-placeholder">
+          <div class="viz-icon">🎯</div>
+          <h4>Points d'intérêt</h4>
+          <p>Attractions touristiques accessibles en train</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Tourisme en Train</h4>
+          <p>Un projet réalisé dans le cadre de l'Open Data University en partenariat avec la Fondation SNCF.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Ressources</h4>
+          <ul>
+            <li><a href="https://defis.data.gouv.fr/defis/tourisme-en-train" target="_blank">Défi ODU</a></li>
+            <li><a href="https://www.data.gouv.fr" target="_blank">Data.gouv.fr</a></li>
+            <li><a href="https://observablehq.com" target="_blank">Observable</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>tourisme-en-train@opendatauniversity.org</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 - SAÉ 303 - Locatelli & Lebars</p>
+      </div>
+    </div>
+  </footer>
 </Layout>
+
+<style>
+  /* Header & Navigation */
+  .header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+    z-index: 1000;
+    padding: 1rem 0;
+  }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .logo-text {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.95rem;
+  }
+
+  .nav-links a:hover {
+    color: var(--color-primary);
+  }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    padding: 8rem 0 6rem;
+    overflow: hidden;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    max-width: 900px;
+  }
+
+  .hero-title {
+    margin: 1.5rem 0 1rem;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .hero-description {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    max-width: 700px;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 4rem;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+    border-top: 2px solid var(--color-border);
+  }
+
+  .stat-item {
+    text-align: left;
+  }
+
+  .stat-number {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    font-weight: 500;
+  }
+
+  .hero-shape {
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 800px;
+    height: 800px;
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05), rgba(0, 168, 89, 0.05));
+    border-radius: 50%;
+    z-index: 0;
+  }
+
+  /* Sections */
+  .section {
+    padding: var(--spacing-section) 0;
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 4rem;
+  }
+
+  .section-header h2 {
+    margin-bottom: 1rem;
+  }
+
+  .section-header p {
+    font-size: 1.25rem;
+  }
+
+  .section-context {
+    background: var(--color-surface);
+  }
+
+  /* Context Grid */
+  .context-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .context-card {
+    text-align: center;
+  }
+
+  .card-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .context-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .context-card p {
+    font-size: 1rem;
+  }
+
+  /* Visualizations */
+  .visualization-container {
+    margin-bottom: 3rem;
+  }
+
+  .visualization-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .visualization-header h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  .text-secondary {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+  }
+
+  .text-light {
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+  }
+
+  .visualization-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .visualizations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .viz-placeholder {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.02), rgba(0, 168, 89, 0.02));
+    border: 2px dashed var(--color-border);
+  }
+
+  .viz-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .viz-placeholder h4 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .viz-placeholder p {
+    font-size: 0.95rem;
+  }
+
+  /* Footer */
+  .footer {
+    background: var(--color-text-primary);
+    color: white;
+    padding: 4rem 0 2rem;
+    margin-top: var(--spacing-section);
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-section h4 {
+    color: white;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .footer-section p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+  }
+
+  .footer-section ul {
+    list-style: none;
+  }
+
+  .footer-section ul li {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-section ul a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footer-section ul a:hover {
+    color: var(--color-primary-light);
+  }
+
+  .footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .footer-bottom p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.875rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+
+    .hero {
+      padding: 4rem 0 3rem;
+    }
+
+    .hero-cta {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .stats {
+      gap: 1.5rem;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+    }
+  }
+</style>
