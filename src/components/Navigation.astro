@@ -131,11 +131,12 @@ const navItems = [
     display: none;
     flex-direction: column;
     gap: 5px;
-    background: none;
+    background: white;
     border: none;
     cursor: pointer;
     padding: 0.5rem;
     z-index: 1001;
+    position: relative;
   }
 
   .hamburger span {
@@ -197,7 +198,7 @@ const navItems = [
 
   @media (max-width: 768px) {
     .hamburger {
-      display: flex;
+      display: flex !important;
     }
 
     .nav-links {
@@ -206,7 +207,7 @@ const navItems = [
       right: 0;
       width: 280px;
       height: 100vh;
-      background: white;
+      background: #ffffff;
       flex-direction: column;
       padding: 5rem 2rem 2rem;
       gap: 0;
