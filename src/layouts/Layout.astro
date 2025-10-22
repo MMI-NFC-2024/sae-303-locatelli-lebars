@@ -1,30 +1,772 @@
 ---
-import "../styles/global.css";
+interface Props {
+  title?: string;
+  description?: string;
+  currentPage?: string;
+}
+
+const {
+  title = "Tourisme en Train - Nouvelle-Aquitaine",
+  description = "Exploration des données ouvertes pour faciliter et encourager le tourisme ferroviaire durable en France",
+  currentPage = "/"
+} = Astro.props;
 ---
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content="Comment faciliter et encourager le tourisme en train en France ?">
-    <title>Tourisme en Train | Voyager Durablement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚆</text></svg>">
   </head>
+  
   <body>
-    <slot />
+    <!-- Header -->
+    <header class="header">
+      <div class="container">
+        <nav class="nav">
+          <!-- Logo -->
+          <a href="/" class="logo">
+            <div class="logo-icon">🚆</div>
+            <div class="logo-content">
+              <div class="logo-text">Tourisme en Train</div>
+              <div class="logo-subtitle">Nouvelle-Aquitaine</div>
+            </div>
+          </a>
+
+          <!-- Burger Menu Button -->
+          <button class="burger-btn" id="burgerBtn" aria-label="Menu de navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <!-- Navigation Links -->
+          <ul class="nav-links" id="navLinks">
+            <li><a href="/" class={currentPage === "/" ? "active" : ""}>Accueil</a></li>
+            <li class="dropdown">
+              <button class="dropdown-btn">
+                Visualisations
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M4 6l4 4 4-4H4z"/>
+                </svg>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="/gares-culturelles">Gares culturelles</a></li>
+                <li><a href="/top-20">Top 20 des gares</a></li>
+                <li><a href="/poi-interactif">POI Interactif</a></li>
+                <li><a href="/simulateur-co2">Simulateur CO₂</a></li>
+                <li><a href="/reseau-velo">Réseau train + vélo</a></li>
+              </ul>
+            </li>
+            <li><a href="/#contexte">Contexte</a></li>
+            <li><a href="/#conclusions">Conclusions</a></li>
+            <li>
+              <a href="https://defis.data.gouv.fr/defis/tourisme-en-train" 
+                 class="btn-nav-cta" 
+                 target="_blank" 
+                 rel="noopener noreferrer">
+                Le défi
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M9 3L8 4l4 4H3v2h9l-4 4 1 1 6-6-6-6z"/>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <!-- À propos -->
+          <div class="footer-section">
+            <h3 class="footer-title">À propos du projet</h3>
+            <p class="footer-text">
+              Projet réalisé dans le cadre de la SAÉ 303 par Enzo Locatelli et Lucas Lebars, 
+              en partenariat avec l'Open Data University et l'initiative Latitudes.
+            </p>
+            <div class="footer-badges">
+              <span class="footer-badge">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 0L10.5 5.5L16 6.5L12 10.5L13 16L8 13L3 16L4 10.5L0 6.5L5.5 5.5L8 0Z"/>
+                </svg>
+                SAÉ 303
+              </span>
+              <span class="footer-badge">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 2C6.34 2 5 3.34 5 5c0 2.92 3 6.5 3 6.5s3-3.58 3-6.5c0-1.66-1.34-3-3-3z"/>
+                </svg>
+                Open Data
+              </span>
+            </div>
+          </div>
+
+          <!-- Navigation rapide -->
+          <div class="footer-section">
+            <h3 class="footer-title">Navigation</h3>
+            <ul class="footer-links">
+              <li><a href="/">Accueil</a></li>
+              <li><a href="/gares-culturelles">Gares culturelles</a></li>
+              <li><a href="/top-20">Top 20 des gares</a></li>
+              <li><a href="/poi-interactif">POI Interactif</a></li>
+              <li><a href="/simulateur-co2">Simulateur CO₂</a></li>
+              <li><a href="/reseau-velo">Réseau train + vélo</a></li>
+            </ul>
+          </div>
+
+          <!-- Ressources -->
+          <div class="footer-section">
+            <h3 class="footer-title">Ressources</h3>
+            <ul class="footer-links">
+              <li>
+                <a href="https://defis.data.gouv.fr/defis/tourisme-en-train" target="_blank" rel="noopener noreferrer">
+                  Défi ODU
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M9 3L8 4l4 4H3v2h9l-4 4 1 1 6-6-6-6z"/>
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.data.gouv.fr" target="_blank" rel="noopener noreferrer">
+                  Data.gouv.fr
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M9 3L8 4l4 4H3v2h9l-4 4 1 1 6-6-6-6z"/>
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.latitudes.cc" target="_blank" rel="noopener noreferrer">
+                  Latitudes
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M9 3L8 4l4 4H3v2h9l-4 4 1 1 6-6-6-6z"/>
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a href="mailto:tourisme-en-train@opendatauniversity.org">
+                  Contact
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M9 3L8 4l4 4H3v2h9l-4 4 1 1 6-6-6-6z"/>
+                  </svg>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Impact -->
+          <div class="footer-section">
+            <h3 class="footer-title">Impact carbone</h3>
+            <div class="footer-impact">
+              <div class="impact-stat">
+                <div class="impact-icon">🌍</div>
+                <div class="impact-content">
+                  <div class="impact-number">-90%</div>
+                  <div class="impact-label">CO₂ avec le train</div>
+                </div>
+              </div>
+              <div class="impact-stat">
+                <div class="impact-icon">🚆</div>
+                <div class="impact-content">
+                  <div class="impact-number">3000+</div>
+                  <div class="impact-label">Gares en France</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <div class="footer-copyright">
+            <p>© 2025 Enzo Locatelli & Lucas Lebars - Projet pédagogique MMI</p>
+          </div>
+          <div class="footer-credits">
+            <p>
+              Données : 
+              <a href="https://www.data.gouv.fr" target="_blank" rel="noopener noreferrer">data.gouv.fr</a>
+              · 
+              <a href="https://www.sncf.com" target="_blank" rel="noopener noreferrer">SNCF</a>
+              · 
+              <a href="https://datatourisme.fr" target="_blank" rel="noopener noreferrer">DATAtourisme</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+      // Mobile menu toggle
+      const burgerBtn = document.getElementById('burgerBtn');
+      const navLinks = document.getElementById('navLinks');
+      
+      if (burgerBtn && navLinks) {
+        burgerBtn.addEventListener('click', () => {
+          burgerBtn.classList.toggle('active');
+          navLinks.classList.toggle('active');
+          document.body.classList.toggle('menu-open');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if (e.target instanceof Node) {
+            if (!burgerBtn.contains(e.target) && !navLinks.contains(e.target)) {
+              burgerBtn.classList.remove('active');
+              navLinks.classList.remove('active');
+              document.body.classList.remove('menu-open');
+            }
+          }
+        });
+
+        // Close menu when clicking on a link
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            burgerBtn.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.classList.remove('menu-open');
+          });
+        });
+      }
+
+      // Dropdown menu
+      const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+      
+      dropdownBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const dropdown = btn.closest('.dropdown');
+          dropdown?.classList.toggle('active');
+        });
+      });
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (this: HTMLAnchorElement, e) {
+          const href = this.getAttribute('href');
+          if (href && href !== '#') {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          }
+        });
+      });
+
+      // Header scroll effect
+      let lastScroll = 0;
+      const header = document.querySelector('.header');
+      
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 100) {
+          header?.classList.add('scrolled');
+        } else {
+          header?.classList.remove('scrolled');
+        }
+        
+        lastScroll = currentScroll;
+      });
+    </script>
   </body>
 </html>
 
-<style>
-  html,
-  body {
+<style is:global>
+  @import "../styles/global.css";
+
+  /* Header Styles */
+  .header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+    z-index: 1000;
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+  }
+
+  .header.scrolled {
+    box-shadow: var(--shadow-md);
+    padding: 0.75rem 0;
+  }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Logo */
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+  }
+
+  .logo:hover {
+    transform: translateX(4px);
+  }
+
+  .logo-icon {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .logo-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .logo-text {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--color-text-primary);
+    line-height: 1;
+  }
+
+  .logo-subtitle {
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  /* Burger Menu Button */
+  .burger-btn {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+  }
+
+  .burger-btn span {
+    width: 25px;
+    height: 2px;
+    background: var(--color-text-primary);
+    transition: all 0.3s ease;
+    border-radius: 2px;
+  }
+
+  .burger-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+  }
+
+  .burger-btn.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .burger-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+  }
+
+  /* Navigation Links */
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .nav-links a {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--color-primary);
+  }
+
+  .nav-links a.active {
+    font-weight: 700;
+  }
+
+  /* Dropdown */
+  .dropdown {
+    position: relative;
+  }
+
+  .dropdown-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    font-family: var(--font-body);
+    transition: color 0.3s ease;
+  }
+
+  .dropdown-btn:hover {
+    color: var(--color-primary);
+  }
+
+  .dropdown-btn svg {
+    transition: transform 0.3s ease;
+  }
+
+  .dropdown.active .dropdown-btn svg {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 0.5rem;
+    list-style: none;
+    min-width: 220px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+  }
+
+  .dropdown.active .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-menu li {
     margin: 0;
-    width: 100%;
-    height: 100%;
+  }
+
+  .dropdown-menu a {
+    display: block;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-menu a:hover {
+    background: var(--color-background);
+  }
+
+  /* CTA Button in Nav */
+  .btn-nav-cta {
+    background: var(--color-primary);
+    color: white !important;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-nav-cta:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+  }
+
+  /* Footer Styles */
+  .footer {
+    background: var(--color-text-primary);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 4rem 0 2rem;
+    margin-top: 5rem;
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .footer-title {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-text {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .footer-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .footer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .footer-links a:hover {
+    color: var(--color-primary-light);
+  }
+
+  .footer-links svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0.6;
+  }
+
+  /* Footer Impact Stats */
+  .footer-impact {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .impact-stat {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+  }
+
+  .impact-icon {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .impact-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .impact-number {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-secondary-light);
+    line-height: 1;
+  }
+
+  .impact-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1;
+  }
+
+  /* Footer Bottom */
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-copyright p,
+  .footer-credits p {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+  }
+
+  .footer-credits a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footer-credits a:hover {
+    color: var(--color-primary-light);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 968px) {
+    .burger-btn {
+      display: flex;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 6rem 2rem 2rem;
+      gap: 1rem;
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links li {
+      width: 100%;
+    }
+
+    .nav-links a,
+    .dropdown-btn {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+    }
+
+    .dropdown-menu {
+      position: static;
+      transform: none;
+      opacity: 1;
+      visibility: visible;
+      box-shadow: none;
+      border: none;
+      padding-left: 1rem;
+      margin-top: 0.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .dropdown.active .dropdown-menu {
+      max-height: 500px;
+    }
+
+    .btn-nav-cta {
+      width: 100%;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .logo-icon {
+      font-size: 1.75rem;
+    }
+
+    .logo-text {
+      font-size: 1rem;
+    }
+
+    .logo-subtitle {
+      font-size: 0.7rem;
+    }
+
+    .footer {
+      padding: 3rem 0 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .footer-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      text-align: center;
+      gap: 1rem;
+    }
+
+    .impact-stat {
+      padding: 0.75rem;
+    }
+
+    .impact-number {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .nav-links {
+      max-width: 100%;
+    }
   }
 </style>

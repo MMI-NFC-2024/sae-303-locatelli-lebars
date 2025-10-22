@@ -1,10 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Navigation from "../components/Navigation.astro";
 ---
 
-<Layout>
-  <Navigation currentPage="/" />
+<Layout currentPage="/">
 
   <!-- Hero Section -->
   <section class="hero" id="accueil">
@@ -211,44 +209,6 @@ import Navigation from "../components/Navigation.astro";
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h4>À propos du projet</h4>
-          <p>Projet SAÉ 303 réalisé dans le cadre de l'Open Data University, une initiative portée par l'association Latitudes en partenariat avec la Fondation SNCF.</p>
-          <p style="margin-top: 1rem;"><strong>Groupe 9 :</strong> Locatelli & Lebars</p>
-        </div>
-        <div class="footer-section">
-          <h4>Ressources</h4>
-          <ul>
-            <li><a href="https://defis.data.gouv.fr/defis/tourisme-en-train" target="_blank" rel="noopener noreferrer">Défi ODU - Tourisme en train</a></li>
-            <li><a href="https://www.data.gouv.fr" target="_blank" rel="noopener noreferrer">Data.gouv.fr</a></li>
-            <li><a href="https://observablehq.com" target="_blank" rel="noopener noreferrer">Observable</a></li>
-            <li><a href="https://www.sncf.com" target="_blank" rel="noopener noreferrer">SNCF</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Sources des données</h4>
-          <ul>
-            <li>Base Basilic (lieux culturels)</li>
-            <li>DataTourisme</li>
-            <li>Référentiel des gares</li>
-            <li>Traces cyclables Nouvelle-Aquitaine</li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Contact</h4>
-          <p>Pour toute question sur le défi :</p>
-          <p><a href="mailto:tourisme-en-train@opendatauniversity.org">tourisme-en-train@opendatauniversity.org</a></p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 - SAÉ 303 - Locatelli & Lebars</p>
-      </div>
-    </div>
-  </footer>
 </Layout>
 
 <style>
@@ -573,61 +533,6 @@ import Navigation from "../components/Navigation.astro";
     font-size: 1.25rem;
     color: var(--color-text-secondary);
     margin-bottom: 2rem;
-  }
-  
-  /* Footer */
-  .footer {
-    background: var(--color-text-primary);
-    color: white;
-    padding: 4rem 0 2rem;
-    margin-top: var(--spacing-section);
-  }
-
-  .footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 3rem;
-    margin-bottom: 3rem;
-  }
-
-  .footer-section h4 {
-    color: white;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
-
-  .footer-section p {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.95rem;
-  }
-
-  .footer-section ul {
-    list-style: none;
-  }
-
-  .footer-section ul li {
-    margin-bottom: 0.5rem;
-  }
-
-  .footer-section ul a {
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-
-  .footer-section ul a:hover {
-    color: var(--color-primary-light);
-  }
-
-  .footer-bottom {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .footer-bottom p {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.875rem;
   }
 
   /* Responsive */

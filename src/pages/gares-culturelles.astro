@@ -3,39 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import CarteGaresEnrichies from "../components/CarteGaresEnrichies.astro";
 ---
 
-<Layout>
-  <!-- Header / Navigation -->
-  <header class="header">
-    <div class="container">
-      <nav class="nav">
-        <div class="logo">
-          <a href="/">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="40" height="40" rx="10" fill="url(#gradient)"/>
-              <path d="M12 20L16 16L24 24L28 20" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="16" cy="16" r="2" fill="white"/>
-              <circle cx="24" cy="24" r="2" fill="white"/>
-              <defs>
-                <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#0066CC"/>
-                  <stop offset="1" stop-color="#00A859"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            <span class="logo-text">Tourisme en Train</span>
-          </a>
-        </div>
-        <ul class="nav-links">
-          <li><a href="/">Accueil</a></li>
-          <li><a href="/gares-culturelles" class="active">Gares culturelles</a></li>
-          <li><a href="/top-20">Top 20</a></li>
-          <li><a href="/poi-interactif">POI Interactif</a></li>
-          <li><a href="/simulateur-co2">Simulateur CO₂</a></li>
-          <li><a href="/reseau-velo">Réseau vélo</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+<Layout currentPage="/gares-culturelles">
 
   <!-- Breadcrumb -->
   <div class="breadcrumb">
