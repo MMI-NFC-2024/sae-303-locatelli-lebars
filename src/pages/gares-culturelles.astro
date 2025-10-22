@@ -1,0 +1,159 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CarteGaresEnrichies from "../components/CarteGaresEnrichies.astro";
+---
+
+<Layout>
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <div class="logo">
+          <a href="/">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="40" height="40" rx="10" fill="url(#gradient)"/>
+              <path d="M12 20L16 16L24 24L28 20" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="16" cy="16" r="2" fill="white"/>
+              <circle cx="24" cy="24" r="2" fill="white"/>
+              <defs>
+                <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#0066CC"/>
+                  <stop offset="1" stop-color="#00A859"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span class="logo-text">Tourisme en Train</span>
+          </a>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/">Accueil</a></li>
+          <li><a href="/gares-culturelles" class="active">Gares culturelles</a></li>
+          <li><a href="/top-20">Top 20</a></li>
+          <li><a href="/poi-interactif">POI Interactif</a></li>
+          <li><a href="/simulateur-co2">Simulateur CO₂</a></li>
+          <li><a href="/reseau-velo">Réseau vélo</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="/">Accueil</a> / <span>Gares culturelles</span>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero-page">
+    <div class="container">
+      <h1>Gares culturelles de Nouvelle-Aquitaine</h1>
+      <p class="lead">Découvrez comment le réseau ferré donne accès au patrimoine culturel régional</p>
+    </div>
+  </section>
+
+  <!-- Visualisation -->
+  <section class="section">
+    <div class="container">
+      <CarteGaresEnrichies />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+    z-index: 1000;
+    padding: 1rem 0;
+  }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+  }
+
+  .logo-text {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+  }
+
+  .nav-links a {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+  }
+
+  .breadcrumb {
+    background: var(--color-surface);
+    padding: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .hero-page {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05), rgba(0, 168, 89, 0.05));
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .hero-page h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .section {
+    padding: var(--spacing-section) 0;
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+  }
+</style>

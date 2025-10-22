@@ -1,40 +1,10 @@
 ---
-import PlotFigure from "../components/PlotFigure.astro";
 import Layout from "../layouts/Layout.astro";
-import * as Plot from "@observablehq/plot";
-import penguins from "../assets/penguins.json";
+import Navigation from "../components/Navigation.astro";
 ---
 
 <Layout>
-  <!-- Header / Navigation -->
-  <header class="header">
-    <div class="container">
-      <nav class="nav">
-        <div class="logo">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="40" height="40" rx="10" fill="url(#gradient)"/>
-            <path d="M12 20L16 16L24 24L28 20" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="16" cy="16" r="2" fill="white"/>
-            <circle cx="24" cy="24" r="2" fill="white"/>
-            <defs>
-              <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0066CC"/>
-                <stop offset="1" stop-color="#00A859"/>
-              </linearGradient>
-            </defs>
-          </svg>
-          <span class="logo-text">Tourisme en Train</span>
-        </div>
-        <ul class="nav-links">
-          <li><a href="#accueil">Accueil</a></li>
-          <li><a href="#contexte">Contexte</a></li>
-          <li><a href="#donnees">Données</a></li>
-          <li><a href="#visualisations">Visualisations</a></li>
-          <li><a href="#conclusions">Conclusions</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <Navigation currentPage="/" />
 
   <!-- Hero Section -->
   <section class="hero" id="accueil">
@@ -139,53 +109,104 @@ import penguins from "../assets/penguins.json";
     <div class="container">
       <div class="section-header">
         <h2>Exploration des données</h2>
-        <p>Analyse et visualisation des données ouvertes pour comprendre et valoriser le tourisme en train.</p>
+        <p>Cliquez sur une visualisation pour l'explorer en détail</p>
       </div>
       
-      <!-- Exemple de visualisation (penguins - à remplacer) -->
-      <div class="visualization-container card">
-        <div class="visualization-header">
-          <h3>Exemple de visualisation</h3>
-          <p class="text-secondary">Cette visualisation sera remplacée par vos données de tourisme ferroviaire</p>
-        </div>
-        <PlotFigure
-          options={{
-            marks: [
-              Plot.dot(penguins, {
-                x: "culmen_length_mm",
-                y: "culmen_depth_mm",
-                stroke: "species",
-              }),
-            ],
-          }}
-        />
-        <div class="visualization-footer">
-          <p class="text-light">Source : Exemple avec données penguins - À remplacer par vos analyses</p>
-        </div>
-      </div>
-      
-      <!-- Placeholder pour futures visualisations -->
       <div class="visualizations-grid">
-        <div class="card viz-placeholder">
-          <div class="viz-icon">📊</div>
-          <h4>Carte interactive</h4>
-          <p>Visualisation géographique des gares et destinations touristiques</p>
-        </div>
-        <div class="card viz-placeholder">
+        <a href="/gares-culturelles" class="viz-card">
           <div class="viz-icon">🗺️</div>
-          <h4>Carte isochrone</h4>
-          <p>Temps de trajet depuis les grandes villes françaises</p>
-        </div>
-        <div class="card viz-placeholder">
-          <div class="viz-icon">📈</div>
-          <h4>Comparaison CO₂</h4>
-          <p>Impact environnemental train vs autres transports</p>
-        </div>
-        <div class="card viz-placeholder">
+          <h3>Gares culturelles</h3>
+          <p>Carte interactive des gares donnant accès aux musées et monuments en moins d'1 km</p>
+          <span class="viz-cta">Explorer →</span>
+        </a>
+        
+        <a href="/top-20" class="viz-card">
+          <div class="viz-icon">📊</div>
+          <h3>Top 20 des gares</h3>
+          <p>Classement des gares avec le meilleur accès au patrimoine culturel</p>
+          <span class="viz-cta">Découvrir →</span>
+        </a>
+        
+        <a href="/poi-interactif" class="viz-card viz-featured">
+          <div class="badge-featured">Le plus interactif</div>
           <div class="viz-icon">🎯</div>
-          <h4>Points d'intérêt</h4>
-          <p>Attractions touristiques accessibles en train</p>
+          <h3>POI Interactif</h3>
+          <p>Explorez l'offre touristique avec des filtres dynamiques (type, gare, rayon)</p>
+          <span class="viz-cta">Filtrer →</span>
+        </a>
+        
+        <a href="/simulateur-co2" class="viz-card">
+          <div class="viz-icon">🌱</div>
+          <h3>Simulateur CO₂</h3>
+          <p>Comparez l'impact carbone entre train et voiture pour votre trajet</p>
+          <span class="viz-cta">Calculer →</span>
+        </a>
+        
+        <a href="/reseau-velo" class="viz-card">
+          <div class="viz-icon">🚴</div>
+          <h3>Réseau train + vélo</h3>
+          <p>Visualisation du maillage complémentaire entre gares et pistes cyclables</p>
+          <span class="viz-cta">Visualiser →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Conclusions -->
+  <section class="section section-conclusions" id="conclusions">
+    <div class="container">
+      <div class="section-header">
+        <h2>Conclusions et perspectives</h2>
+        <p>Ce que nos analyses révèlent sur le potentiel du tourisme ferroviaire en Nouvelle-Aquitaine</p>
+      </div>
+      
+      <div class="conclusions-grid">
+        <div class="card conclusion-card">
+          <div class="conclusion-number">01</div>
+          <h3>Accessibilité culturelle</h3>
+          <p>
+            La Nouvelle-Aquitaine dispose d'un réseau ferré dense donnant accès à un patrimoine culturel riche. 
+            Plus de <strong>150 gares</strong> permettent d'accéder à des musées et monuments en moins d'1 km à pied.
+          </p>
         </div>
+        
+        <div class="card conclusion-card">
+          <div class="conclusion-number">02</div>
+          <h3>Impact environnemental</h3>
+          <p>
+            Le train émet jusqu'à <strong>70 fois moins de CO₂</strong> qu'une voiture individuelle (TGV vs voiture). 
+            Choisir le train pour un trajet Bordeaux-Bayonne économise plus de <strong>20 kg de CO₂</strong>.
+          </p>
+        </div>
+        
+        <div class="card conclusion-card">
+          <div class="conclusion-number">03</div>
+          <h3>Multimodalité</h3>
+          <p>
+            L'alliance du train et du vélo offre des possibilités infinies. Le réseau cyclable régional 
+            complète parfaitement les liaisons ferroviaires pour un <strong>tourisme doux et durable</strong>.
+          </p>
+        </div>
+        
+        <div class="card conclusion-card">
+          <div class="conclusion-number">04</div>
+          <h3>Recommandations</h3>
+          <p>
+            Pour encourager le tourisme ferroviaire : améliorer la communication sur l'offre culturelle 
+            accessible, développer les services vélo en gare, et créer des <strong>pass touristiques train+culture</strong>.
+          </p>
+        </div>
+      </div>
+      
+      <div class="cta-final">
+        <h3>Prêt à voyager autrement ?</h3>
+        <p>Découvrez la Nouvelle-Aquitaine en train et participez à un tourisme plus durable.</p>
+        <a href="https://defis.data.gouv.fr/defis/tourisme-en-train" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+          En savoir plus sur le défi
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 3L9 4l5 5H3v2h11l-5 5 1 1 7-7-7-7z"/>
+          </svg>
+        </a>
       </div>
     </div>
   </section>
@@ -195,20 +216,32 @@ import penguins from "../assets/penguins.json";
     <div class="container">
       <div class="footer-content">
         <div class="footer-section">
-          <h4>Tourisme en Train</h4>
-          <p>Un projet réalisé dans le cadre de l'Open Data University en partenariat avec la Fondation SNCF.</p>
+          <h4>À propos du projet</h4>
+          <p>Projet SAÉ 303 réalisé dans le cadre de l'Open Data University, une initiative portée par l'association Latitudes en partenariat avec la Fondation SNCF.</p>
+          <p style="margin-top: 1rem;"><strong>Groupe 9 :</strong> Locatelli & Lebars</p>
         </div>
         <div class="footer-section">
           <h4>Ressources</h4>
           <ul>
-            <li><a href="https://defis.data.gouv.fr/defis/tourisme-en-train" target="_blank">Défi ODU</a></li>
-            <li><a href="https://www.data.gouv.fr" target="_blank">Data.gouv.fr</a></li>
-            <li><a href="https://observablehq.com" target="_blank">Observable</a></li>
+            <li><a href="https://defis.data.gouv.fr/defis/tourisme-en-train" target="_blank" rel="noopener noreferrer">Défi ODU - Tourisme en train</a></li>
+            <li><a href="https://www.data.gouv.fr" target="_blank" rel="noopener noreferrer">Data.gouv.fr</a></li>
+            <li><a href="https://observablehq.com" target="_blank" rel="noopener noreferrer">Observable</a></li>
+            <li><a href="https://www.sncf.com" target="_blank" rel="noopener noreferrer">SNCF</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Sources des données</h4>
+          <ul>
+            <li>Base Basilic (lieux culturels)</li>
+            <li>DataTourisme</li>
+            <li>Référentiel des gares</li>
+            <li>Traces cyclables Nouvelle-Aquitaine</li>
           </ul>
         </div>
         <div class="footer-section">
           <h4>Contact</h4>
-          <p>tourisme-en-train@opendatauniversity.org</p>
+          <p>Pour toute question sur le défi :</p>
+          <p><a href="mailto:tourisme-en-train@opendatauniversity.org">tourisme-en-train@opendatauniversity.org</a></p>
         </div>
       </div>
       <div class="footer-bottom">
@@ -400,64 +433,148 @@ import penguins from "../assets/penguins.json";
   }
 
   /* Visualizations */
-  .visualization-container {
-    margin-bottom: 3rem;
+  .section-data {
+    background: white;
   }
-
-  .visualization-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 2px solid var(--color-border);
-  }
-
-  .visualization-header h3 {
-    margin-bottom: 0.5rem;
-  }
-
-  .text-secondary {
-    color: var(--color-text-secondary);
-    font-size: 1rem;
-  }
-
-  .text-light {
-    color: var(--color-text-light);
-    font-size: 0.875rem;
-  }
-
-  .visualization-footer {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--color-border);
-  }
-
+  
   .visualizations-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
     margin-top: 3rem;
   }
-
-  .viz-placeholder {
+  
+  .viz-card {
+    position: relative;
+    padding: 2.5rem 2rem;
+    background: white;
+    border: 2px solid var(--color-border);
+    border-radius: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    padding: 3rem 2rem;
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.02), rgba(0, 168, 89, 0.02));
-    border: 2px dashed var(--color-border);
   }
-
+  
+  .viz-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary);
+  }
+  
+  .viz-featured {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.03), rgba(0, 168, 89, 0.03));
+    border-color: var(--color-primary);
+  }
+  
+  .badge-featured {
+    position: absolute;
+    top: -12px;
+    right: 1rem;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  
   .viz-icon {
-    font-size: 3rem;
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    line-height: 1;
+  }
+  
+  .viz-card h3 {
+    font-size: 1.5rem;
     margin-bottom: 1rem;
+    color: var(--color-text-primary);
   }
-
-  .viz-placeholder h4 {
+  
+  .viz-card p {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+  
+  .viz-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-size: 1rem;
+  }
+  
+  .viz-card:hover .viz-cta {
+    gap: 0.75rem;
+  }
+  
+  /* Conclusions */
+  .section-conclusions {
+    background: var(--color-surface);
+  }
+  
+  .conclusions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+  
+  .conclusion-card {
+    position: relative;
+    padding: 2rem;
+  }
+  
+  .conclusion-number {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 800;
+    color: rgba(0, 102, 204, 0.1);
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    line-height: 1;
+  }
+  
+  .conclusion-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+  
+  .conclusion-card p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+  
+  .cta-final {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05), rgba(0, 168, 89, 0.05));
+    border-radius: 16px;
+    border: 2px solid var(--color-border);
+  }
+  
+  .cta-final h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+  
+  .cta-final p {
     font-size: 1.25rem;
-    margin-bottom: 0.5rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
   }
-
-  .viz-placeholder p {
-    font-size: 0.95rem;
-  }
-
+  
   /* Footer */
   .footer {
     background: var(--color-text-primary);

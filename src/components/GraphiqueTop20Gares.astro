@@ -1,0 +1,133 @@
+---
+import * as Plot from "@observablehq/plot";
+import PlotFigure from './PlotFigure.astro';
+import VisualizationWrapper from './VisualizationWrapper.astro';
+import garesData from '../assets/gares_nettoyees_(1).json';
+import poiData from '../assets/basilic_nouvelle_aquitaine_(1).json';
+import { getDistance, getDeptCode, CODES_NA } from '../utils/geo';
+
+// Filtrer les gares de Nouvelle-Aquitaine
+const garesNA = garesData.filter((gare: any) => 
+  CODES_NA.includes(getDeptCode(gare["Code commune"]))
+);
+
+// Filtrer les POI culturels (Musées et Monuments)
+const poiNA = poiData.filter((poi: any) => 
+  poi.Sous_domaine === "Musée" || poi.Sous_domaine === "Monument"
+);
+
+const rayonKm = 1.0;
+
+// Enrichir les gares avec le compte de POI
+const garesEnrichies = garesNA.map((gare: any) => {
+  let compteur = 0;
+  let nomsPOI: string[] = [];
+  
+  for (const poi of poiNA) {
+    const distance = getDistance(
+      gare.latitude, gare.longitude,
+      poi.Latitude, poi.Longitude
+    );
+    
+    if (distance <= rayonKm) {
+      compteur++;
+      nomsPOI.push(poi.Nom);
+    }
+  }
+  
+  return {
+    Nom: gare.Nom,
+    poi_proches: compteur,
+    liste_poi: nomsPOI
+  };
+});
+
+// Top 20 des gares avec le plus de POI
+const top20Gares = garesEnrichies
+  .filter((g: any) => g.poi_proches > 0)
+  .sort((a: any, b: any) => b.poi_proches - a.poi_proches)
+  .slice(0, 20);
+---
+
+<VisualizationWrapper
+  title="Top 20 des gares culturelles"
+  subtitle="Les gares offrant le meilleur accès aux musées et monuments en Nouvelle-Aquitaine (< 1 km à pied)"
+  id="top-20-gares"
+>
+  <PlotFigure
+    options={{
+      marginLeft: 180,
+      height: 600,
+      y: {
+        domain: top20Gares.map((d: any) => d.Nom).reverse(),
+        label: null
+      },
+      x: {
+        label: "Nombre de musées/monuments à moins d'1 km",
+        grid: true
+      },
+      marks: [
+        Plot.barX(top20Gares, {
+          y: "Nom",
+          x: "poi_proches",
+          fill: "steelblue",
+          sort: { y: "x", reverse: true },
+          tip: true
+        }),
+        Plot.text(top20Gares, {
+          x: "poi_proches",
+          y: "Nom",
+          text: (d: any) => d.poi_proches,
+          dx: -15,
+          fill: "white",
+          fontWeight: "bold"
+        }),
+        Plot.ruleX([0])
+      ]
+    }}
+  />
+  
+  <div class="insights">
+    <h4>💡 Insights clés</h4>
+    <ul>
+      <li><strong>{top20Gares[0].Nom}</strong> arrive en tête avec <strong>{top20Gares[0].poi_proches}</strong> lieux culturels accessibles</li>
+      <li>Ces 20 gares concentrent un patrimoine culturel riche et facilement accessible</li>
+      <li>Idéal pour des week-ends culturels sans voiture !</li>
+    </ul>
+  </div>
+</VisualizationWrapper>
+
+<style>
+  .insights {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05), rgba(0, 168, 89, 0.05));
+    border-radius: 8px;
+    border-left: 4px solid var(--color-secondary);
+  }
+  
+  .insights h4 {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+  
+  .insights ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .insights li {
+    padding: 0.5rem 0;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  .insights li::before {
+    content: "→";
+    color: var(--color-secondary);
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+</style>

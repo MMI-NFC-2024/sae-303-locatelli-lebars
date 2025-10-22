@@ -1,0 +1,68 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navigation from "../components/Navigation.astro";
+import GraphiqueTop20Gares from "../components/GraphiqueTop20Gares.astro";
+---
+
+<Layout>
+  <Navigation currentPage="/top-20" />
+
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="/">Accueil</a> / <span>Top 20 des gares</span>
+    </div>
+  </div>
+
+  <section class="hero-page">
+    <div class="container">
+      <h1>Top 20 des gares culturelles</h1>
+      <p class="lead">Les gares offrant le meilleur accès aux musées et monuments</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <GraphiqueTop20Gares />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .breadcrumb {
+    background: var(--color-surface);
+    padding: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .hero-page {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05), rgba(0, 168, 89, 0.05));
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .hero-page h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .section {
+    padding: var(--spacing-section) 0;
+  }
+</style>

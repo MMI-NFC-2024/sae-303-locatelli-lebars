@@ -1,0 +1,174 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navigation from "../components/Navigation.astro";
+import CarteInteractivePOI from "../components/CarteInteractivePOI.astro";
+---
+
+<Layout>
+  <Navigation currentPage="/poi-interactif" />
+
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="/">Accueil</a> / <span>POI Interactif</span>
+    </div>
+  </div>
+
+  <section class="hero-page">
+    <div class="container">
+      <h1>Explorer l'offre touristique</h1>
+      <p class="lead">Carte interactive avec filtres par type et proximité des gares</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <CarteInteractivePOI />
+      
+      <div class="contexte-section">
+        <h3>🎯 Comment utiliser cette carte ?</h3>
+        <div class="contexte-grid">
+          <div class="contexte-card">
+            <div class="contexte-icon">🏛️</div>
+            <h4>Filtrez par type</h4>
+            <p>Choisissez entre musées, monuments, ou tous les POI pour affiner votre recherche selon vos centres d'intérêt.</p>
+          </div>
+          
+          <div class="contexte-card">
+            <div class="contexte-icon">🚉</div>
+            <h4>Sélectionnez une gare</h4>
+            <p>Explorez ce qui est accessible depuis n'importe quelle gare de Nouvelle-Aquitaine. Le cercle montre la zone de recherche.</p>
+          </div>
+          
+          <div class="contexte-card">
+            <div class="contexte-icon">📏</div>
+            <h4>Ajustez le rayon</h4>
+            <p>De 0,5 à 5 km : définissez la distance que vous êtes prêt à parcourir à pied ou à vélo depuis la gare.</p>
+          </div>
+        </div>
+        
+        <div class="story-section">
+          <h3>📖 L'histoire derrière les données</h3>
+          <p>
+            En Nouvelle-Aquitaine, le train n'est pas seulement un moyen de transport : c'est une <strong>porte d'entrée vers le patrimoine culturel</strong>. 
+            Cette carte révèle comment les gares se transforment en points de départ pour des aventures culturelles, 
+            permettant de découvrir <strong>musées et monuments historiques sans avoir besoin d'une voiture</strong>.
+          </p>
+          <p>
+            Les données montrent que de nombreuses gares régionales offrent un accès direct à des trésors culturels méconnus. 
+            En combinant <strong>mobilité douce et tourisme culturel</strong>, les visiteurs peuvent réduire leur empreinte carbone 
+            tout en enrichissant leur expérience de voyage.
+          </p>
+          <p>
+            <em>💡 Astuce : Essayez de filtrer sur "Musée" avec un rayon de 1 km depuis les grandes gares pour découvrir 
+            des opportunités insoupçonnées de tourisme ferroviaire !</em>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .breadcrumb {
+    background: var(--color-surface);
+    padding: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .hero-page {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05), rgba(0, 168, 89, 0.05));
+    padding: 4rem 0;
+    text-align: center;
+  }
+  
+  .contexte-section {
+    margin-top: 3rem;
+  }
+  
+  .contexte-section h3 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+  }
+  
+  .contexte-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .contexte-card {
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .contexte-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .contexte-card h4 {
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .contexte-card p {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  
+  .story-section {
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(0, 168, 89, 0.08), rgba(0, 102, 204, 0.08));
+    border-radius: 12px;
+    border-left: 4px solid var(--color-secondary);
+  }
+  
+  .story-section h3 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+  
+  .story-section p {
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  
+  .story-section em {
+    color: var(--color-secondary);
+    font-weight: 500;
+  }
+
+  .hero-page h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .section {
+    padding: var(--spacing-section) 0;
+  }
+</style>

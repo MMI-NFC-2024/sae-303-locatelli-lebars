@@ -1,0 +1,54 @@
+---
+interface Props {
+  height?: string;
+  zoom?: number;
+  center?: [number, number];
+}
+
+const { 
+  height = "600px",
+  zoom = 8,
+  center = [44.8, -0.5]
+} = Astro.props;
+
+// Générer un ID unique pour cette carte
+const mapId = `map-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div id={mapId} class="leaflet-map" style={`height: ${height};`}></div>
+
+<style>
+  .leaflet-map {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+</style>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+
+<script define:vars={{ mapId, zoom, center }}>
+  import L from 'leaflet';
+
+  // Attendre que le DOM soit chargé
+  if (typeof window !== 'undefined') {
+    window.addEventListener('DOMContentLoaded', () => {
+      // Initialiser la carte
+      const map = L.map(mapId).setView(center, zoom);
+
+      // Ajouter le fond de carte OpenStreetMap
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      // Exposer la carte globalement pour permettre aux scripts externes de l'utiliser
+      window[`leafletMap_${mapId}`] = map;
+    });
+  }
+</script>

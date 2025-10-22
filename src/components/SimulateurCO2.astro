@@ -1,0 +1,528 @@
+---
+import * as Plot from "@observablehq/plot";
+import VisualizationWrapper from './VisualizationWrapper.astro';
+import garesData from '../assets/gares_nettoyees_(1).json';
+import { getDistance, getDeptCode, CODES_NA, CO2_FACTORS } from '../utils/geo';
+
+// Filtrer les gares de Nouvelle-Aquitaine
+const garesNA = garesData.filter((gare: any) => 
+  CODES_NA.includes(getDeptCode(gare["Code commune"]))
+);
+
+// Gare par défaut
+const gareDefautDepart = garesNA.find((g: any) => 
+  g.Nom.toUpperCase().includes("BORDEAUX SAINT-JEAN")
+) || garesNA[0];
+
+const gareDefautArrivee = garesNA.find((g: any) => 
+  g.Nom.toUpperCase().includes("BAYONNE")
+) || garesNA[1];
+
+// Calculer les données initiales
+const distanceInitiale = getDistance(
+  gareDefautDepart.latitude,
+  gareDefautDepart.longitude,
+  gareDefautArrivee.latitude,
+  gareDefautArrivee.longitude
+);
+
+const estimationsInitiales = Object.entries(CO2_FACTORS).map(([mode, facteur]) => ({
+  mode: mode,
+  emission_g: distanceInitiale * (facteur as number),
+  emission_kg: (distanceInitiale * (facteur as number)) / 1000
+})).sort((a, b) => b.emission_g - a.emission_g);
+---
+
+<VisualizationWrapper
+  title="Simulateur d'impact carbone"
+  subtitle="Comparez les émissions de CO₂ entre différents modes de transport pour votre trajet en train"
+  id="simulateur-co2"
+>
+  <div class="simulator-container">
+    <div class="controls-panel">
+      <div class="control-group">
+        <label for="gare-depart">
+          <span class="label-icon">🚉</span>
+          Gare de départ
+        </label>
+        <select id="gare-depart" class="select-gare">
+          {garesNA.map((gare: any) => (
+            <option 
+              value={JSON.stringify({ nom: gare.Nom, lat: gare.latitude, lon: gare.longitude })}
+              selected={gare.Nom === gareDefautDepart.Nom}
+            >
+              {gare.Nom}
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      <div class="arrow-icon">→</div>
+      
+      <div class="control-group">
+        <label for="gare-arrivee">
+          <span class="label-icon">🎯</span>
+          Gare d'arrivée
+        </label>
+        <select id="gare-arrivee" class="select-gare">
+          {garesNA.map((gare: any) => (
+            <option 
+              value={JSON.stringify({ nom: gare.Nom, lat: gare.latitude, lon: gare.longitude })}
+              selected={gare.Nom === gareDefautArrivee.Nom}
+            >
+              {gare.Nom}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+    
+    <div id="results-container" class="results-container">
+      <!-- Les résultats seront affichés ici dynamiquement -->
+    </div>
+    
+    <div id="chart-container" class="chart-container">
+      <!-- Le graphique Observable Plot sera injecté ici -->
+    </div>
+  </div>
+</VisualizationWrapper>
+
+<!-- Charger D3 et Observable Plot via CDN pour mise à jour dynamique -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script type="module">
+  import * as Plot from "https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6.17/+esm";
+  window.Plot = Plot;
+</script>
+
+<style>
+  .simulator-container {
+    padding: 1.5rem 0;
+  }
+  
+  .controls-panel {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1.5rem;
+    align-items: end;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border-radius: 12px;
+  }
+  
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .control-group label {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .label-icon {
+    font-size: 1.25rem;
+  }
+  
+  .select-gare {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .select-gare:hover {
+    border-color: var(--color-primary);
+  }
+  
+  .select-gare:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+  }
+  
+  .arrow-icon {
+    font-size: 2rem;
+    color: var(--color-primary);
+    font-weight: bold;
+    align-self: center;
+  }
+  
+  .results-container {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(0, 168, 89, 0.05), rgba(0, 102, 204, 0.05));
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--color-secondary);
+  }
+  
+  .results-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .result-item {
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .result-label {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: 0.5rem;
+  }
+  
+  .result-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+  
+  .chart-container {
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .insights-section {
+    margin-top: 2.5rem;
+    padding: 2.5rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .insights-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--color-secondary);
+  }
+  
+  .insight-item {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(0, 168, 89, 0.03), rgba(0, 102, 204, 0.03));
+    border-radius: 12px;
+    line-height: 1.8;
+    border-left: 4px solid var(--color-secondary);
+    font-size: 1.05rem;
+  }
+  
+  .insight-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .insight-item strong {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+  
+  .insight-item ul {
+    margin: 0.75rem 0 0 1.5rem;
+    padding: 0;
+  }
+  
+  .insight-item li {
+    margin: 0.5rem 0;
+    color: var(--color-text-secondary);
+  }
+  
+  .highlight-green {
+    color: var(--color-secondary);
+    font-weight: 700;
+    background: rgba(0, 168, 89, 0.1);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+  }
+  
+  .highlight-red {
+    color: #dc143c;
+    font-weight: 700;
+    background: rgba(220, 20, 60, 0.1);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+  }
+  
+  @media (max-width: 768px) {
+    .controls-panel {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .arrow-icon {
+      transform: rotate(90deg);
+    }
+    
+    .insights-section {
+      padding: 1.5rem;
+    }
+    
+    .insights-title {
+      font-size: 1.3rem;
+    }
+    
+    .insight-item {
+      font-size: 1rem;
+      padding: 1.25rem;
+    }
+  }
+</style>
+
+<script define:vars={{ CO2_FACTORS }}>
+  // Fonction de calcul de distance (Haversine)
+  const getDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      0.5 -
+      Math.cos(dLat) / 2 +
+      (Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        (1 - Math.cos(dLon))) / 2;
+    return R * 2 * Math.asin(Math.sqrt(a));
+  };
+  
+  // Attendre que les CDN soient chargés
+  window.addEventListener('load', () => {
+    // Attendre un petit délai pour que Plot soit assigné à window
+    setTimeout(() => {
+      if (typeof Plot === 'undefined' || typeof d3 === 'undefined') {
+        console.error('Plot ou D3 non chargés');
+        console.log('window.Plot:', window.Plot);
+        console.log('typeof Plot:', typeof Plot);
+        return;
+      }
+      
+      console.log('Plot chargé avec succès:', Plot);
+    
+    // Fonction principale de calcul et affichage
+    const calculerEtAfficher = () => {
+      const selectDepart = document.getElementById('gare-depart');
+      const selectArrivee = document.getElementById('gare-arrivee');
+      
+      if (!selectDepart || !selectArrivee) return;
+      
+      const gareDepart = JSON.parse(selectDepart.value);
+      const gareArrivee = JSON.parse(selectArrivee.value);
+      
+      if (gareDepart.nom === gareArrivee.nom) {
+        document.getElementById('results-container').innerHTML = `
+          <p style="text-align: center; color: var(--color-text-secondary);">
+            Veuillez sélectionner deux gares différentes.
+          </p>
+        `;
+        document.getElementById('chart-container').innerHTML = '';
+        return;
+      }
+      
+      const distance = getDistance(
+        gareDepart.lat, gareDepart.lon,
+        gareArrivee.lat, gareArrivee.lon
+      );
+      
+      // Calculer les émissions pour chaque mode de transport
+      const estimations = Object.entries(CO2_FACTORS).map(([mode, facteur]) => ({
+        mode: mode,
+        emission_g: distance * facteur,
+        emission_kg: (distance * facteur) / 1000
+      }));
+      
+      // Trier par émission décroissante
+      estimations.sort((a, b) => b.emission_g - a.emission_g);
+      
+      // Afficher les résultats textuels
+      const emissionTrain = estimations.find(e => e.mode === 'TGV').emission_kg;
+      const emissionVoiture = estimations.find(e => e.mode.includes('Voiture')).emission_kg;
+      const economie = emissionVoiture - emissionTrain;
+      const pourcentageEconomie = ((economie / emissionVoiture) * 100).toFixed(1);
+      
+      document.getElementById('results-container').innerHTML = `
+        <h4 style="margin-top: 0; margin-bottom: 0.5rem; color: var(--color-text-primary); font-size: 1.4rem;">
+          📍 ${gareDepart.nom} → ${gareArrivee.nom}
+        </h4>
+        <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          Découvrez l'impact carbone de votre trajet selon le mode de transport choisi
+        </p>
+        <div class="results-info">
+          <div class="result-item">
+            <div class="result-label">🛤️ Distance</div>
+            <div class="result-value">${distance.toFixed(1)} km</div>
+          </div>
+          <div class="result-item" style="background: linear-gradient(135deg, rgba(0, 168, 89, 0.1), rgba(0, 168, 89, 0.05));">
+            <div class="result-label">🚄 CO₂ en train (TGV)</div>
+            <div class="result-value" style="color: var(--color-secondary);">${emissionTrain.toFixed(2)} kg</div>
+            <div style="font-size: 0.75rem; color: var(--color-text-light); margin-top: 0.25rem;">
+              ${(emissionTrain * 1000 / distance).toFixed(1)} g/km
+            </div>
+          </div>
+          <div class="result-item" style="background: linear-gradient(135deg, rgba(220, 20, 60, 0.1), rgba(220, 20, 60, 0.05));">
+            <div class="result-label">🚗 CO₂ en voiture</div>
+            <div class="result-value" style="color: #dc143c;">${emissionVoiture.toFixed(2)} kg</div>
+            <div style="font-size: 0.75rem; color: var(--color-text-light); margin-top: 0.25rem;">
+              ${(emissionVoiture * 1000 / distance).toFixed(1)} g/km
+            </div>
+          </div>
+          <div class="result-item" style="background: linear-gradient(135deg, rgba(0, 168, 89, 0.15), rgba(0, 168, 89, 0.08)); border: 2px solid var(--color-secondary);">
+            <div class="result-label">✨ Économie de CO₂</div>
+            <div class="result-value" style="color: var(--color-secondary);">-${economie.toFixed(2)} kg</div>
+            <div style="font-size: 0.85rem; color: var(--color-secondary); margin-top: 0.25rem; font-weight: 600;">
+              ${pourcentageEconomie}% d'émissions en moins !
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Créer le graphique avec Observable Plot (style top 20)
+      const chartDiv = document.getElementById('chart-container');
+      chartDiv.innerHTML = '';
+      
+      // Supprimer les anciens insights s'ils existent
+      const oldInsights = document.querySelector('.insights-section');
+      if (oldInsights) {
+        oldInsights.remove();
+      }
+      
+      try {
+        const chart = Plot.plot({
+          marginLeft: 150,
+          marginRight: 20,
+          height: 350,
+          style: {
+            fontSize: "14px",
+            fontFamily: "system-ui, -apple-system, sans-serif"
+          },
+          x: {
+            label: "Émissions de CO₂ (grammes) →",
+            grid: true,
+            labelAnchor: "center"
+          },
+          y: {
+            label: null
+          },
+          marks: [
+            Plot.barX(estimations, {
+              y: "mode",
+              x: "emission_g",
+              fill: d => d.mode.includes("Voiture") ? "#dc143c" : "#0066cc",
+              sort: { y: "x", reverse: true },
+              tip: {
+                format: {
+                  y: false,
+                  x: (d) => `${d.toFixed(0)} grammes de CO₂`
+                }
+              }
+            }),
+            Plot.ruleX([0])
+          ]
+        });
+        
+        chartDiv.appendChild(chart);
+        
+        // Ajouter une section d'insights après le graphique
+        const rapportVoitureTGV = (emissionVoiture / emissionTrain).toFixed(1);
+        const emissionMoyenneTrain = (estimations.filter(e => !e.mode.includes('Voiture')).reduce((sum, e) => sum + e.emission_g, 0) / 4).toFixed(0);
+        const distanceEquivVoiture = (distance * (emissionVoiture / emissionTrain)).toFixed(0);
+        
+        const insightsHTML = `
+          <div class="insights-section">
+            <h3 class="insights-title">
+              💡 Ce que ces chiffres nous disent
+            </h3>
+            
+            <div class="insight-item">
+              <strong>🌍 Impact environnemental majeur</strong><br>
+              Pour ce trajet de <strong>${distance.toFixed(0)} km</strong>, prendre la voiture émet 
+              <span class="highlight-red">${rapportVoitureTGV}× plus de CO₂</span> que le TGV !<br><br>
+              
+              En choisissant le train, vous évitez <span class="highlight-green">${economie.toFixed(2)} kg de CO₂</span>, 
+              soit l'équivalent de <strong>${(economie * 1000 / 120).toFixed(0)} km parcourus en voiture</strong>. 
+              C'est comme si vous n'aviez jamais pris la route ! 🎉
+            </div>
+            
+            <div class="insight-item">
+              <strong>🚆 Tous les trains sont écologiques, mais certains plus que d'autres</strong><br>
+              Le TGV est le champion de l'efficacité énergétique : il émet <span class="highlight-green">${(CO2_FACTORS.TER / CO2_FACTORS.TGV).toFixed(0)}× moins de CO₂/km</span> 
+              que le TER, grâce à sa vitesse élevée et son excellent taux de remplissage.<br><br>
+              
+              📊 <strong>Pour ce trajet :</strong>
+              <ul>
+                <li>TGV : <span class="highlight-green">${estimations.find(e => e.mode === 'TGV').emission_g.toFixed(0)} g</span> - Le plus efficace</li>
+                <li>INTERCITÉS : <span class="highlight-green">${estimations.find(e => e.mode === 'INTERCITES').emission_g.toFixed(0)} g</span> - Excellent compromis</li>
+                <li>RER : <span class="highlight-green">${estimations.find(e => e.mode === 'RER').emission_g.toFixed(0)} g</span> - Idéal en urbain</li>
+                <li>TER : ${estimations.find(e => e.mode === 'TER').emission_g.toFixed(0)} g - Moins efficace mais reste 5× mieux que la voiture</li>
+              </ul>
+            </div>
+            
+            <div class="insight-item">
+              <strong>📈 Vision globale</strong><br>
+              En moyenne, les trains de ce trajet émettent <span class="highlight-green">${emissionMoyenneTrain} g de CO₂/km</span>, 
+              contre <span class="highlight-red">${CO2_FACTORS["Voiture (moyenne)"]} g/km pour la voiture</span>.<br><br>
+              
+              Si vous faisiez ce trajet une fois par semaine pendant un an, choisir le train plutôt que la voiture 
+              économiserait <strong>${(economie * 52).toFixed(0)} kg de CO₂</strong> - soit près d'une demi-tonne ! 🌱
+            </div>
+            
+            <div class="insight-item">
+              <strong>✨ Mise en perspective : ${economie.toFixed(2)} kg de CO₂ économisés, c'est...</strong>
+              <ul>
+                <li>🖥️ <strong>${(economie / 0.4).toFixed(0)} heures</strong> d'utilisation d'un ordinateur portable</li>
+                <li>🥩 <strong>${(economie / 2.5).toFixed(0)} repas</strong> à base de bœuf</li>
+                <li>⛽ <strong>${(economie / 0.9).toFixed(1)} litres</strong> d'essence non consommés</li>
+                <li>🌳 L'équivalent de ce qu'absorbe un arbre en <strong>${(economie / 22 * 365).toFixed(0)} jours</strong></li>
+              </ul>
+              <br>
+              <em style="color: var(--color-secondary); font-size: 0.95rem;">
+                💚 Chaque trajet en train est un geste concret pour la planète. Multipliez ces économies par tous vos déplacements de l'année !
+              </em>
+            </div>
+          </div>
+        `;
+        
+        chartDiv.insertAdjacentHTML('afterend', insightsHTML);
+        
+      } catch (error) {
+        console.error('Erreur lors de la création du graphique:', error);
+        chartDiv.innerHTML = `
+          <p style="text-align: center; color: red;">
+            Erreur lors de la création du graphique: ${error.message}
+          </p>
+        `;
+      }
+    };
+    
+    // Initialiser au chargement
+    calculerEtAfficher();
+    
+    // Écouter les changements de sélection
+    const selectDepart = document.getElementById('gare-depart');
+    const selectArrivee = document.getElementById('gare-arrivee');
+    
+    if (selectDepart) {
+      selectDepart.addEventListener('change', calculerEtAfficher);
+    }
+    if (selectArrivee) {
+      selectArrivee.addEventListener('change', calculerEtAfficher);
+    }
+    }, 100); // Attendre 100ms pour que Plot soit assigné
+  });
+</script>

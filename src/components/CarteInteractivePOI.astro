@@ -1,0 +1,368 @@
+---
+import VisualizationWrapper from './VisualizationWrapper.astro';
+import garesData from '../assets/gares_nettoyees_(1).json';
+import poiData from '../assets/datatourisme_(1).json';
+import { getDeptCode, CODES_NA } from '../utils/geo';
+
+// Filtrer les gares de Nouvelle-Aquitaine
+const garesNA = garesData.filter((gare: any) => 
+  CODES_NA.includes(getDeptCode(gare["Code commune"]))
+);
+
+// Filtrer les POI de Nouvelle-Aquitaine avec coordonnées valides
+const poiNA = poiData.filter((poi: any) => 
+  poi.Latitude && poi.Longitude && poi.Type && poi["Sous-type"]
+);
+
+// Extraire les types uniques
+const typesUniques = ["-- Tous les types --", ...new Set(
+  poiNA.flatMap((poi: any) => poi.Type.split(",").map((t: string) => t.trim()))
+)].sort();
+
+const mapId = `map-poi-interactif`;
+---
+
+<VisualizationWrapper
+  title="Explorer l'offre touristique de Nouvelle-Aquitaine"
+  subtitle="Carte interactive des points d'intérêt accessibles depuis les gares - Filtrez par type pour personnaliser votre recherche"
+  id="carte-poi-interactive"
+>
+  <div class="interactive-controls">
+    <div class="control-group">
+      <label for="type-filter">
+        <span class="label-icon">🎯</span>
+        Type de point d'intérêt
+      </label>
+      <select id="type-filter" class="select-filter">
+        {typesUniques.map((type: string) => (
+          <option value={type}>{type}</option>
+        ))}
+      </select>
+    </div>
+    
+    <div class="control-group">
+      <label for="gare-filter">
+        <span class="label-icon">🚉</span>
+        Filtrer par proximité d'une gare
+      </label>
+      <select id="gare-filter" class="select-filter">
+        <option value="">-- Toutes les gares --</option>
+        {garesNA.map((gare: any) => (
+          <option value={JSON.stringify({ nom: gare.Nom, lat: gare.latitude, lon: gare.longitude })}>
+            {gare.Nom}
+          </option>
+        ))}
+      </select>
+    </div>
+    
+    <div class="control-group" id="rayon-group" style="display: none;">
+      <label for="rayon-filter">
+        <span class="label-icon">📏</span>
+        Rayon de recherche : <span id="rayon-value">5</span> km
+      </label>
+      <input 
+        type="range" 
+        id="rayon-filter" 
+        class="range-slider"
+        min="0.5" 
+        max="50" 
+        step="0.5" 
+        value="5"
+      />
+    </div>
+  </div>
+  
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-item">
+      <span class="stat-value" id="poi-count">0</span>
+      <span class="stat-label">points d'intérêt</span>
+    </div>
+  </div>
+  
+  <div id={mapId} class="leaflet-map"></div>
+</VisualizationWrapper>
+
+<style>
+  .interactive-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .control-group label {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .label-icon {
+    font-size: 1.25rem;
+  }
+  
+  .select-filter {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .select-filter:hover {
+    border-color: var(--color-primary);
+  }
+  
+  .select-filter:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+  }
+  
+  .range-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--color-border);
+    outline: none;
+    cursor: pointer;
+  }
+  
+  .range-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .range-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .stats-bar {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05), rgba(0, 168, 89, 0.05));
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+  
+  .stat-label {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-top: 0.25rem;
+  }
+  
+  .leaflet-map {
+    width: 100%;
+    height: 600px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+  
+  @media (max-width: 768px) {
+    .interactive-controls {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+
+<script define:vars={{ garesNA, poiNA }}>
+  window.addEventListener('load', () => {
+    if (typeof L === 'undefined') {
+      console.error('Leaflet not loaded');
+      return;
+    }
+    
+    const mapId = 'map-poi-interactif';
+      
+    // Fonction de calcul de distance
+    const getDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371;
+        const dLat = ((lat2 - lat1) * Math.PI) / 180;
+        const dLon = ((lon2 - lon1) * Math.PI) / 180;
+        const a =
+          0.5 -
+          Math.cos(dLat) / 2 +
+          (Math.cos((lat1 * Math.PI) / 180) *
+            Math.cos((lat2 * Math.PI) / 180) *
+            (1 - Math.cos(dLon))) / 2;
+        return R * 2 * Math.asin(Math.sqrt(a));
+    };
+    
+    const mapElement = document.getElementById(mapId);
+    if (!mapElement) return;
+    
+    // Initialiser la carte
+    const map = L.map(mapId).setView([44.8, -0.5], 8);
+    
+    // Ajouter le fond de carte
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 19
+    }).addTo(map);
+    
+    // Layers pour POI et gare sélectionnée
+    let poiLayer = L.layerGroup().addTo(map);
+    let gareSelectedLayer = L.layerGroup().addTo(map);
+        
+        // Fonction pour obtenir la couleur par type
+        const getColorByType = (type) => {
+          const colors = {
+            'Patrimoine culturel': '#0066CC',
+            'Patrimoine naturel': '#00A859',
+            'Gastronomie': '#FF6B35',
+            'Activité': '#FFB800',
+            'Hébergement': '#9B59B6',
+            'Equipement': '#34495E'
+          };
+          
+          const firstType = type.split(',')[0].trim();
+          return colors[firstType] || '#999';
+        };
+        
+        // Fonction pour filtrer et afficher les POI
+        const updatePOI = () => {
+          poiLayer.clearLayers();
+          gareSelectedLayer.clearLayers();
+          
+          const typeFilter = document.getElementById('type-filter').value;
+          const gareFilter = document.getElementById('gare-filter').value;
+          const rayonFilter = parseFloat(document.getElementById('rayon-filter').value);
+          
+          let filteredPOI = poiNA;
+          
+          // Filtre par type
+          if (typeFilter !== "-- Tous les types --") {
+            filteredPOI = filteredPOI.filter(poi => poi.Type.includes(typeFilter));
+          }
+          
+          // Filtre par gare + rayon
+          if (gareFilter) {
+            const gare = JSON.parse(gareFilter);
+        
+        // Afficher la gare sélectionnée
+        const gareIcon = L.icon({
+              iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+              shadowSize: [41, 41]
+        });
+        
+        L.marker([gare.lat, gare.lon], { icon: gareIcon })
+          .bindPopup(`<strong>${gare.nom}</strong>`)
+          .addTo(gareSelectedLayer);
+        
+        // Cercle de rayon
+        L.circle([gare.lat, gare.lon], {
+              radius: rayonFilter * 1000,
+              color: '#0066CC',
+              fillColor: '#0066CC',
+              fillOpacity: 0.1,
+              weight: 2
+        }).addTo(gareSelectedLayer);
+        
+        // Filtrer par distance
+        filteredPOI = filteredPOI.filter(poi => {
+          const distance = getDistance(gare.lat, gare.lon, poi.Latitude, poi.Longitude);
+          return distance <= rayonFilter;
+        });
+        
+        // Centrer sur la gare
+        map.setView([gare.lat, gare.lon], 11);
+      }
+      
+      // Afficher les POI
+      filteredPOI.forEach(poi => {
+        const color = getColorByType(poi.Type);
+        
+        L.circleMarker([poi.Latitude, poi.Longitude], {
+              radius: 5,
+              fillColor: color,
+              color: '#000',
+              weight: 1,
+              opacity: 0.3,
+              fillOpacity: 0.8
+        })
+        .bindPopup(`
+          <strong>${poi.Nom}</strong><br>
+          <em>Type:</em> ${poi.Type}<br>
+          <em>Sous-type:</em> ${poi["Sous-type"]}
+        `)
+        .addTo(poiLayer);
+      });
+      
+      // Mettre à jour le compteur
+      document.getElementById('poi-count').textContent = filteredPOI.length;
+    };
+    
+    // Événements
+    document.getElementById('type-filter').addEventListener('change', updatePOI);
+    document.getElementById('gare-filter').addEventListener('change', (e) => {
+      const rayonGroup = document.getElementById('rayon-group');
+      rayonGroup.style.display = e.target.value ? 'flex' : 'none';
+      updatePOI();
+    });
+    document.getElementById('rayon-filter').addEventListener('input', (e) => {
+      document.getElementById('rayon-value').textContent = e.target.value;
+      updatePOI();
+    });
+    
+    // Affichage initial
+    updatePOI();
+  });
+</script>

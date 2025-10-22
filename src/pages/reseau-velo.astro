@@ -1,0 +1,208 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navigation from "../components/Navigation.astro";
+import CarteReseauVelo from "../components/CarteReseauVelo.astro";
+---
+
+<Layout>
+  <Navigation currentPage="/reseau-velo" />
+
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="/">Accueil</a> / <span>Réseau vélo</span>
+    </div>
+  </div>
+
+  <section class="hero-page">
+    <div class="container">
+      <h1>Réseau ferré et pistes cyclables</h1>
+      <p class="lead">L'alliance du train et du vélo pour un tourisme durable</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <CarteReseauVelo />
+      
+      <div class="multimodal-section">
+        <h3>🚴‍♂️ La révolution de la mobilité multimodale</h3>
+        
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="stat-number">🚂+🚴</div>
+            <p>Combinez train et vélo pour des trajets zéro émission</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">100%</div>
+            <p>Autonomie et liberté de mouvement</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">♻️</div>
+            <p>Impact carbone minimal</p>
+          </div>
+        </div>
+        
+        <div class="story-content">
+          <h4>🌿 Pourquoi le train + vélo est l'avenir du tourisme ?</h4>
+          <p>
+            La <strong>Nouvelle-Aquitaine</strong> dispose d'un réseau exceptionnel de <strong>pistes cyclables</strong> 
+            qui complètent parfaitement le réseau ferroviaire. Cette carte met en lumière comment ces deux infrastructures 
+            se connectent pour créer des opportunités de tourisme <strong>100% décarboné</strong>.
+          </p>
+          
+          <h4>🎯 Ce que révèle cette carte</h4>
+          <ul>
+            <li><strong>Continuité des parcours :</strong> De nombreuses gares sont directement reliées aux pistes cyclables, 
+            permettant de poursuivre votre voyage à vélo dès votre arrivée.</li>
+            
+            <li><strong>Découverte des territoires :</strong> Le vélo offre une liberté d'exploration que la voiture ne permet pas, 
+            tout en restant accessible depuis les gares.</li>
+            
+            <li><strong>Écotourisme accessible :</strong> Pas besoin de transporter votre vélo de chez vous ! 
+            De nombreuses gares proposent des services de location de vélos, rendant ce mode de voyage accessible à tous.</li>
+          </ul>
+          
+          <div class="highlight-box">
+            <h4>💡 Le saviez-vous ?</h4>
+            <p>
+              La <strong>Vélodyssée</strong>, l'une des routes cyclables les plus célèbres d'Europe, traverse la Nouvelle-Aquitaine 
+              du nord au sud et croise plusieurs gares. Un voyage train+vélo sur cette route permet d'économiser jusqu'à 
+              <strong>40 kg de CO₂</strong> par rapport à un trajet en voiture, tout en découvrant des paysages inaccessibles 
+              par la route !
+            </p>
+          </div>
+          
+          <h4>🚀 Comment profiter de ce réseau ?</h4>
+          <ol>
+            <li><strong>Planifiez votre itinéraire :</strong> Repérez les gares qui intersectent avec les pistes cyclables</li>
+            <li><strong>Vérifiez les services vélo :</strong> Beaucoup de gares offrent location, consigne et réparation</li>
+            <li><strong>Partez à l'aventure :</strong> Combinez étapes en train et tronçons à vélo selon vos envies</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .breadcrumb {
+    background: var(--color-surface);
+    padding: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .hero-page {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05), rgba(0, 168, 89, 0.05));
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .hero-page h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .section {
+    padding: var(--spacing-section) 0;
+  }
+  
+  .multimodal-section {
+    margin-top: 3rem;
+  }
+  
+  .multimodal-section h3 {
+    font-size: 1.8rem;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .stat-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .stat-card {
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(0, 168, 89, 0.1), rgba(0, 168, 89, 0.05));
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid rgba(0, 168, 89, 0.2);
+  }
+  
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-card p {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+  }
+  
+  .story-content {
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .story-content h4 {
+    color: var(--color-primary);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+  
+  .story-content h4:first-child {
+    margin-top: 0;
+  }
+  
+  .story-content p, .story-content li {
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  
+  .story-content ul, .story-content ol {
+    padding-left: 1.5rem;
+  }
+  
+  .story-content li {
+    margin-bottom: 0.75rem;
+  }
+  
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.05));
+    border-left: 4px solid #ffc107;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+  }
+  
+  .highlight-box h4 {
+    margin-top: 0 !important;
+    color: #f57c00;
+  }
+</style>
